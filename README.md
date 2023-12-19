@@ -1,2 +1,2 @@
 # raytracing
-Simple raytracing program
+Simple raytracing program, the same you'we seen hundred times.
