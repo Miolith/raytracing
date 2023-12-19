@@ -1,7 +1,8 @@
 #pragma once
 
-class Scene {
+class Scene
+{
 public:
-  Scene(/* args */);
-  ~Scene();
+    Scene(/* args */);
+    ~Scene();
 };

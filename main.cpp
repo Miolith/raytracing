@@ -1,13 +1,16 @@
+#include "camera.hpp"
 #include "renderer.hpp"
 #include "scene.hpp"
 
-int main() {
-  Scene scene;
-  Renderer renderer(scene);
+int main()
+{
+    Scene scene;
+    Camera camera(480, 640);
+    Renderer renderer(scene, camera);
 
-  renderer.render();
+    renderer.render();
 
-  renderer.save("image.png");
+    renderer.save("image.png");
 
-  return 0;
+    return 0;
 }

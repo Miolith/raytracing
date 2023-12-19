@@ -1,9 +1,9 @@
 # Variables
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11
+CXXFLAGS = -Wall -Wextra -std=c++23 -g
 
 # Files
-SRC = scene.cpp renderer.cpp main.cpp
+SRC = scene.cpp renderer.cpp camera.cpp main.cpp
 OBJ = $(SRC:.cpp=.o)
 EXE = main
 
