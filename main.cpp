@@ -5,7 +5,7 @@
 int main()
 {
     Scene scene;
-    Camera camera(180, 640);
+    Camera camera(480, 640);
     Renderer renderer(scene, camera);
 
     renderer.render();

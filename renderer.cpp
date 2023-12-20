@@ -21,7 +21,8 @@ void Renderer::drawSkybox()
     {
         for (int x = 0; x < framebuffer.width; x++)
         {
-            framebuffer.set(x, y, color_t{50, 10, 255});
+            float gradient = 1.0f - FLOAT(y) / FLOAT(framebuffer.height);
+            framebuffer.set(x, y, color_t{0.2f * gradient, 0.4f * gradient, 0.8f});
         }
     }
 }
