@@ -19,4 +19,5 @@ public:
     ~Renderer();
     void render();
     void save(std::string filename);
+    void drawSkybox();
 };

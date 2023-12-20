@@ -3,8 +3,8 @@
 class Camera
 {
 public:
-    int screenHeight = 500;
-    int screenWidth = 500;
+    int screenHeight;
+    int screenWidth;
     Camera(int screenHeight, int screenWidth);
     ~Camera();
 };
