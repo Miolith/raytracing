@@ -55,21 +55,28 @@ void Renderer::render()
                              - linalg::vec3(0, 0, camera.focal_length) - viewport_u/2 - viewport_v/2;
     auto pixel00_loc = viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5f;
 
-    for(Object *object : scene.getObjects())
+    for (int y = 0; y < framebuffer.height; y++)
     {
-        for (int y = 0; y < framebuffer.height; y++)
+        for (int x = 0; x < framebuffer.width; x++)
         {
-            for (int x = 0; x < framebuffer.width; x++)
+            float t_min = MAXFLOAT;
+            for(Object* object : scene.getObjects())
             {
                 auto pixel_loc = pixel00_loc + pixel_delta_u * x + pixel_delta_v * y;
                 auto ray = Ray{camera_center, pixel_loc - camera_center};
                 float t = object->shape.hit(ray.origin - object->position, ray.direction);
-                if (t > 0.0f)
-                {
-                    linalg::vec3 hit_point = ray.origin + ray.direction * t;
-                    linalg::vec3 normal = object->shape.normal(hit_point, object->position);
-                    framebuffer.set(x, y, color_t(normal * 0.5f + 0.5f));
-                }
+
+                if (t < 0.0f)
+                    continue;
+                
+                t_min = std::min(t, t_min);
+
+                if (t_min < t)
+                    continue;
+
+                linalg::vec3 hit_point = ray.origin + ray.direction * t;
+                linalg::vec3 normal = object->shape.normal(hit_point, object->position);
+                framebuffer.set(x, y, color_t(normal * 0.5f + 0.5f));
             }
         }
     }

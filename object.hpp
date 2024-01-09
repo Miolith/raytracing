@@ -20,6 +20,15 @@ public:
     linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position);
 };
 
+class Ground : public Shape
+{
+private:
+    float groundHeight = 0.0f;
+public:
+    Ground();
+    float hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
+    linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position);
+};
 
 class Material
 {

@@ -5,17 +5,27 @@
 
 int main()
 {
+    Scene scene;
+
     Sphere sphere(1.0f);
     DefaultMaterial material(color_t{1.0f, 0.0f, 0.0f});
     linalg::vec3 position(0.0f, 0.0f, -5.0f);
-    Scene scene;
-    scene.add(
-        Object(
-            sphere,
-            material,
-            position
-        )
+    auto obj1 = Object(
+        sphere,
+        material,
+        position
     );
+    scene.add(obj1
+    );
+
+    Ground ground;
+    linalg::vec3 groundPosition(0.0f, -2.0f, 0.0f);
+    auto obj = Object(
+        ground,
+        material,
+        groundPosition
+    );
+    scene.add(obj);
     Camera camera(480, 640);
     Renderer renderer(scene, camera);
 
