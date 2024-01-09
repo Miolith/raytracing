@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
-
+#include <cmath>
+#include <iostream>
 
 namespace linalg
 {
@@ -8,19 +9,19 @@ namespace linalg
 class vec3
 {
 private:
-    std::array<float, 3> data;
-public:
-    vec3(float x, float y, float z)
-        : data({ x, y, z })
-    {}
+        std::array<float, 3> data;
+    public:
+        vec3(float x, float y, float z)
+            : data({ x, y, z })
+        {}
 
-    vec3()
-        : data({ 0.0f, 0.0f, 0.0f })
-    {}
+        vec3()
+            : data({ 0.0f, 0.0f, 0.0f })
+        {}
 
-    float &x = data[0];
-    float &y = data[1];
-    float &z = data[2];
+        float &x = data[0];
+        float &y = data[1];
+        float &z = data[2];
 
     vec3 operator+(vec3 other)
     {
@@ -49,34 +50,80 @@ public:
         );
     }
 
-    vec3 operator/(float scalar)
-    {
-        return vec3(
-            this->x / scalar,
-            this->y / scalar,
-            this->z / scalar
-        );
-    }
-
     float operator[](int index)
     {
         return this->data[index];
     }
+
+    void operator=(vec3 other)
+    {
+        this->x = other.x;
+        this->y = other.y;
+        this->z = other.z;
+    }
+
+    float length()
+    {
+        return std::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+    }
+
+    vec3 normalize()
+    {
+        float length = this->length();
+        return vec3(
+            this->x / length,
+            this->y / length,
+            this->z / length
+        );
+    }
+
+    std::ostream &operator<<(std::ostream &os)
+    {
+        os << "vec3(" << this->x << ", " << this->y << ", " << this->z << ")";
+        return os;
+    }
 };
 
-
-inline float dot(vec3 a, vec3 b)
+inline std::ostream &operator<<(std::ostream &os, vec3 &v)
 {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
+    os << "vec3(" << v.x << ' ' << v.y << ' ' << v.z << ')';
+    return os;
 }
 
-inline vec3 cross(vec3 a, vec3 b)
-{
-    return vec3(
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z, 
-        a.x * b.y - a.y * b.x
-    );
+inline vec3 operator+(const vec3 &u, const vec3 &v) {
+    return vec3(u.x + v.x, u.y + v.y, u.z + v.z);
+}
+
+inline vec3 operator-(const vec3 &u, const vec3 &v) {
+    return vec3(u.x - v.x, u.y - v.y, u.z - v.z);
+}
+
+inline vec3 operator*(const vec3 &u, const vec3 &v) {
+    return vec3(u.x * v.x, u.y * v.y, u.z * v.z);
+}
+
+inline vec3 operator*(double t, const vec3 &v) {
+    return vec3(t*v.x, t*v.y, t*v.z);
+}
+
+inline vec3 operator*(const vec3 &v, double t) {
+    return t * v;
+}
+
+inline vec3 operator/(vec3 v, double t) {
+    return (1/t) * v;
+}
+
+inline double dot(const vec3 &u, const vec3 &v) {
+    return u.x * v.x
+         + u.y * v.y
+         + u.z * v.z;
+}
+
+inline vec3 cross(const vec3 &u, const vec3 &v) {
+    return vec3(u.y * v.z - u.z * v.y,
+                u.z * v.x - u.x * v.z,
+                u.x * v.y - u.y * v.x);
 }
 
 class mat3

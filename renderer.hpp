@@ -13,6 +13,12 @@ private:
     Scene &scene;
     Camera &camera;
     pixelbuffer_t framebuffer;
+    // ray
+    struct Ray
+    {
+        linalg::vec3 origin;
+        linalg::vec3 direction;
+    } ray;
 
 public:
     Renderer(Scene &scene, Camera &camera);
@@ -20,4 +26,5 @@ public:
     void render();
     void save(std::string filename);
     void drawSkybox();
+
 };
