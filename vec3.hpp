@@ -62,6 +62,24 @@ private:
         this->z = other.z;
     }
 
+    vec3 operator-()
+    {
+        return vec3(
+            -this->x,
+            -this->y,
+            -this->z
+        );
+    }
+
+    vec3 operator+(float scalar)
+    {
+        return vec3(
+            this->x + scalar,
+            this->y + scalar,
+            this->z + scalar
+        );
+    }
+
     float length()
     {
         return std::sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
@@ -112,6 +130,10 @@ inline vec3 operator*(const vec3 &v, double t) {
 
 inline vec3 operator/(vec3 v, double t) {
     return (1/t) * v;
+}
+
+inline vec3 operator+(vec3 v, double t) {
+    return vec3(v.x + t, v.y + t, v.z + t);
 }
 
 inline double dot(const vec3 &u, const vec3 &v) {

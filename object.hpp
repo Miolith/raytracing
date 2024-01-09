@@ -6,7 +6,8 @@
 class Shape
 {
 public:
-    virtual bool hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) = 0;
+    virtual float hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) = 0;
+    virtual linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position) = 0;
 };
 
 class Sphere : public Shape
@@ -15,7 +16,8 @@ private:
     float radius;
 public:
     Sphere(float radius);
-    bool hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
+    float hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
+    linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position);
 };
 
 
@@ -37,9 +39,7 @@ public:
 class DefaultMaterial : public Material
 {
 public:
-    color_t color;
-
-    DefaultMaterial() : Material(color)
+    DefaultMaterial(color_t color) : Material(color)
     {}
 
     float BRDF(linalg::vec3 normal)

@@ -6,7 +6,7 @@
 int main()
 {
     Sphere sphere(1.0f);
-    DefaultMaterial material;
+    DefaultMaterial material(color_t{1.0f, 0.0f, 0.0f});
     linalg::vec3 position(0.0f, 0.0f, -5.0f);
     Scene scene;
     scene.add(

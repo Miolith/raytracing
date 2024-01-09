@@ -34,12 +34,10 @@ void Renderer::render()
     auto aspect_ratio = FLOAT(camera.screenWidth) / FLOAT(camera.screenHeight);
     int image_width = camera.screenWidth;
 
-    // Calculate the image height, and ensure that it's at least 1.
     int image_height = static_cast<int>(image_width / aspect_ratio);
-    image_height = (image_height < 1) ? 1 : image_height;
+    image_height = std::max(image_height, 1);
 
     // Camera
-    auto focal_length = 1.0;
     auto viewport_height = 2.0;
     auto viewport_width = viewport_height * (FLOAT(image_width)/image_height);
     auto camera_center = linalg::vec3();
@@ -54,7 +52,7 @@ void Renderer::render()
 
     // Calculate the location of the upper left pixel.
     auto viewport_upper_left = camera_center
-                             - linalg::vec3(0, 0, focal_length) - viewport_u/2 - viewport_v/2;
+                             - linalg::vec3(0, 0, camera.focal_length) - viewport_u/2 - viewport_v/2;
     auto pixel00_loc = viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5f;
 
     for(Object *object : scene.getObjects())
@@ -65,10 +63,12 @@ void Renderer::render()
             {
                 auto pixel_loc = pixel00_loc + pixel_delta_u * x + pixel_delta_v * y;
                 auto ray = Ray{camera_center, pixel_loc - camera_center};
-                auto t = object->shape.hit(ray.origin - object->position, ray.direction);
-                if (t)
+                float t = object->shape.hit(ray.origin - object->position, ray.direction);
+                if (t > 0.0f)
                 {
-                    framebuffer.set(x, y, color_t{0.5f, 0.5f, 0.5f});
+                    linalg::vec3 hit_point = ray.origin + ray.direction * t;
+                    linalg::vec3 normal = object->shape.normal(hit_point, object->position);
+                    framebuffer.set(x, y, color_t(normal * 0.5f + 0.5f));
                 }
             }
         }
