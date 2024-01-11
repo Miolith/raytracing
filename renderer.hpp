@@ -23,8 +23,7 @@ private:
 public:
     Renderer(Scene &scene, Camera &camera);
     ~Renderer();
+    color_t rayColor(Ray ray, int depth);
     void render();
     void save(std::string filename);
-    void drawSkybox();
-
 };

@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <vector>
+
 #include "vec3.hpp"
 
 #define FLOAT static_cast<float>
@@ -17,9 +18,7 @@ public:
     float &b = rgb.z;
 
     color_t(int r, int g, int b)
-        : rgb({ FLOAT(r) / 256.0f,
-                FLOAT(g) / 256.0f,
-                FLOAT(b) / 256.0f })
+        : rgb({ FLOAT(r) / 256.0f, FLOAT(g) / 256.0f, FLOAT(b) / 256.0f })
     {}
 
     color_t()
@@ -27,8 +26,7 @@ public:
     {}
 
     color_t(uint8_t *pixel)
-        : rgb({ FLOAT(pixel[0]) / 256.0f,
-                FLOAT(pixel[1]) / 256.0f,
+        : rgb({ FLOAT(pixel[0]) / 256.0f, FLOAT(pixel[1]) / 256.0f,
                 FLOAT(pixel[2]) / 256.0f })
     {}
 
@@ -40,15 +38,34 @@ public:
         : rgb({ r, g, b })
     {}
 
+    void operator=(color_t other)
+    {
+        this->r = other.r;
+        this->g = other.g;
+        this->b = other.b;
+    }
+
+    color_t operator*(float scalar)
+    {
+        return color_t(this->r * scalar, this->g * scalar, this->b * scalar);
+    }
+
+    color_t operator+(color_t other)
+    {
+        return color_t(this->r + other.r, this->g + other.g, this->b + other.b);
+    }
+
     std::array<uint8_t, 3> toRGB()
     {
-        return {
-            UINT8(this->r * 255.99f),
-            UINT8(this->g * 255.99f),
-            UINT8(this->b * 255.99f)
-        };
+        return { UINT8(this->r * 255.99f), UINT8(this->g * 255.99f),
+                 UINT8(this->b * 255.99f) };
     }
 };
+
+inline color_t operator*(float scalar, color_t color)
+{
+    return color * scalar;
+}
 
 class pixelbuffer_t
 {
