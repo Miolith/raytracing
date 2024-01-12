@@ -18,7 +18,6 @@
 class color_t : public linalg::vec3
 {
 public:
-
     color_t(int r, int g, int b)
         : vec3(FLOAT(r) / 255.0f, FLOAT(g) / 255.0f, FLOAT(b) / 255.0f)
     {}
@@ -40,9 +39,18 @@ public:
         : vec3(r, g, b)
     {}
 
-    float r() { return this->x; }
-    float g() { return this->y; }
-    float b() { return this->z; }
+    float r()
+    {
+        return this->x;
+    }
+    float g()
+    {
+        return this->y;
+    }
+    float b()
+    {
+        return this->z;
+    }
 
     color_t(std::string hex)
     {
@@ -74,11 +82,6 @@ public:
                  UINT8(this->z * 255.0f) };
     }
 };
-
-inline color_t operator*(float scalar, color_t color)
-{
-    return color * scalar;
-}
 
 class pixelbuffer_t
 {
