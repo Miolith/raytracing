@@ -9,56 +9,69 @@
 #define FLOAT static_cast<float>
 #define UINT8 static_cast<uint8_t>
 
-class color_t
+#define RED color_t(1.0f, 0.0f, 0.0f)
+#define GREEN color_t(0.0f, 1.0f, 0.0f)
+#define BLUE color_t(0.0f, 0.0f, 1.0f)
+#define WHITE color_t(1.0f, 1.0f, 1.0f)
+#define BLACK color_t(0.0f, 0.0f, 0.0f)
+
+class color_t : public linalg::vec3
 {
 public:
-    linalg::vec3 rgb;
-    float &r = rgb.x;
-    float &g = rgb.y;
-    float &b = rgb.z;
 
     color_t(int r, int g, int b)
-        : rgb({ FLOAT(r) / 256.0f, FLOAT(g) / 256.0f, FLOAT(b) / 256.0f })
+        : vec3(FLOAT(r) / 255.0f, FLOAT(g) / 255.0f, FLOAT(b) / 255.0f)
     {}
 
     color_t()
-        : rgb({ 0.0f, 0.0f, 0.0f })
+        : vec3(0.0f, 0.0f, 0.0f)
     {}
 
     color_t(uint8_t *pixel)
-        : rgb({ FLOAT(pixel[0]) / 256.0f, FLOAT(pixel[1]) / 256.0f,
-                FLOAT(pixel[2]) / 256.0f })
+        : vec3(FLOAT(pixel[0]) / 255.0f, FLOAT(pixel[1]) / 255.0f,
+               FLOAT(pixel[2]) / 255.0f)
     {}
 
     color_t(linalg::vec3 rgb)
-        : rgb(rgb)
+        : vec3(rgb)
     {}
 
     color_t(float r, float g, float b)
-        : rgb({ r, g, b })
+        : vec3(r, g, b)
     {}
 
-    void operator=(color_t other)
-    {
-        this->r = other.r;
-        this->g = other.g;
-        this->b = other.b;
-    }
+    float r() { return this->x; }
+    float g() { return this->y; }
+    float b() { return this->z; }
 
-    color_t operator*(float scalar)
+    color_t(std::string hex)
     {
-        return color_t(this->r * scalar, this->g * scalar, this->b * scalar);
-    }
-
-    color_t operator+(color_t other)
-    {
-        return color_t(this->r + other.r, this->g + other.g, this->b + other.b);
+        if (hex[0] == '#')
+            hex = hex.substr(1);
+        if (hex.length() == 3)
+        {
+            this->x = std::stoi(hex.substr(0, 1), nullptr, 16) / 15.0f;
+            this->y = std::stoi(hex.substr(1, 1), nullptr, 16) / 15.0f;
+            this->z = std::stoi(hex.substr(2, 1), nullptr, 16) / 15.0f;
+        }
+        else if (hex.length() == 6)
+        {
+            this->x = std::stoi(hex.substr(0, 2), nullptr, 16) / 255.0f;
+            this->y = std::stoi(hex.substr(2, 2), nullptr, 16) / 255.0f;
+            this->z = std::stoi(hex.substr(4, 2), nullptr, 16) / 255.0f;
+        }
+        else
+        {
+            this->x = 0.0f;
+            this->y = 0.0f;
+            this->z = 0.0f;
+        }
     }
 
     std::array<uint8_t, 3> toRGB()
     {
-        return { UINT8(this->r * 255.99f), UINT8(this->g * 255.99f),
-                 UINT8(this->b * 255.99f) };
+        return { UINT8(this->x * 255.0f), UINT8(this->y * 255.0f),
+                 UINT8(this->z * 255.0f) };
     }
 };
 

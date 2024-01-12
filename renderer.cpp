@@ -16,9 +16,9 @@ Renderer::Renderer(Scene &scene, Camera &camera)
 Renderer::~Renderer()
 {}
 
-color_t Renderer::rayColor(Ray ray, int depth)
+color_t Renderer::rayColor(Ray ray, int max_depth)
 {
-    if (depth >= 20)
+    if (max_depth <= 0)
         return color_t(0.0f, 0.0f, 0.0f);
     float t_min = MAXFLOAT;
     auto a = 0.5 + 0.5 * (ray.direction.y);
@@ -43,7 +43,7 @@ color_t Renderer::rayColor(Ray ray, int depth)
         color = 0.5f
                 * rayColor(
                     Ray{ hit_point, linalg::random_on_hemisphere(normal) },
-                    depth + 1)
+                    max_depth - 1)
             + 0.5f * object->material.color;
         break;
     }
@@ -88,7 +88,7 @@ void Renderer::render()
                 pixel00_loc + pixel_delta_u * x + pixel_delta_v * y;
             auto ray_direction = pixel_loc - camera_center;
             auto ray = Ray{ camera_center, ray_direction };
-            color_t color = rayColor(ray, 0);
+            color_t color = rayColor(ray, 30);
             framebuffer.set(x, y, color);
         }
     }
