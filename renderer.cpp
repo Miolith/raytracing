@@ -1,6 +1,7 @@
 #include "renderer.hpp"
 
 #include <iostream>
+#include <ranges>
 
 #include "camera.hpp"
 #include "scene.hpp"
@@ -13,7 +14,13 @@ Renderer::Renderer(Scene &scene, Camera &camera)
     , framebuffer(camera.screenWidth, camera.screenHeight)
 {}
 
-Renderer::~Renderer()
+Renderer::Renderer(Scene &scene, Camera &camera, int max_depth,
+                   int samples_per_pixel)
+    : scene(scene)
+    , camera(camera)
+    , max_depth(max_depth)
+    , samples_per_pixel(samples_per_pixel)
+    , framebuffer(camera.screenWidth, camera.screenHeight)
 {}
 
 color_t Renderer::rayColor(Ray ray, int max_depth)
@@ -42,10 +49,8 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
         linalg::vec3 hit_point = ray.origin + ray.direction * t;
         linalg::vec3 normal = object->shape.normal(hit_point, object->position);
         color = 0.5f
-                * rayColor(
-                    Ray{ hit_point, normal + linalg::random() },
-                    max_depth - 1
-                );
+            * rayColor(Ray{ hit_point, normal + linalg::random() },
+                       max_depth - 1);
         break;
     }
     return color;
@@ -81,24 +86,22 @@ void Renderer::render()
     auto pixel00_loc =
         viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5f;
 
-    for (int y = 0; y < framebuffer.height; y++)
+    for (auto [x, y] :
+         std::views::cartesian_product(std::views::iota(0, image_width),
+                                       std::views::iota(0, image_height)))
     {
-        for (int x = 0; x < framebuffer.width; x++)
+        color_t color = color_t(0.0f, 0.0f, 0.0f);
+        for (int s = 0; s < samples_per_pixel; s++)
         {
-            color_t color = color_t(0.0f, 0.0f, 0.0f);
-            for(int s = 0; s < samples_per_pixel; s++)
-            {
-                auto pixel_loc =
-                    pixel00_loc + pixel_delta_u * (x + linalg::random_float())
-                    + pixel_delta_v * (y + linalg::random_float());
-                auto ray_direction = pixel_loc - camera_center;
-                auto ray = Ray{ camera_center, ray_direction };
-                color += rayColor(ray, this->max_depth);
-
-            }
-            color /= samples_per_pixel;
-            framebuffer.set(x, y, color);
+            auto pixel_loc = pixel00_loc
+                + pixel_delta_u * (x + linalg::random_float())
+                + pixel_delta_v * (y + linalg::random_float());
+            auto ray_direction = pixel_loc - camera_center;
+            auto ray = Ray{ camera_center, ray_direction };
+            color += rayColor(ray, this->max_depth);
         }
+        color /= samples_per_pixel;
+        framebuffer.set(x, y, color);
     }
 }
 

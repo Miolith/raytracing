@@ -24,7 +24,8 @@ private:
 
 public:
     Renderer(Scene &scene, Camera &camera);
-    ~Renderer();
+    Renderer(Scene &scene, Camera &camera, int max_depth,
+             int samples_per_pixel);
     color_t rayColor(Ray ray, int depth);
     void render();
     void save(std::string filename);
