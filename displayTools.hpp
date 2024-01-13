@@ -3,8 +3,9 @@
 #include <array>
 #include <cstdint>
 #include <vector>
+#include <memory>
 
-#include "vec3.hpp"
+#include "linalg.hpp"
 
 #define FLOAT static_cast<float>
 #define UINT8 static_cast<uint8_t>
@@ -14,6 +15,11 @@
 #define BLUE color_t(0.0f, 0.0f, 1.0f)
 #define WHITE color_t(1.0f, 1.0f, 1.0f)
 #define BLACK color_t(0.0f, 0.0f, 0.0f)
+#define YELLOW color_t(1.0f, 1.0f, 0.0f)
+#define CYAN color_t(0.0f, 1.0f, 1.0f)
+#define MAGENTA color_t(1.0f, 0.0f, 1.0f)
+#define GRAY color_t(0.5f, 0.5f, 0.5f)
+#define BEIGE color_t(0.9f, 0.9f, 0.78f)
 
 class color_t : public linalg::vec3
 {
@@ -76,10 +82,14 @@ public:
         }
     }
 
-    std::array<uint8_t, 3> toRGB()
+    std::tuple<uint8_t, uint8_t, uint8_t> toRGB()
     {
-        return { UINT8(this->x * 255.0f), UINT8(this->y * 255.0f),
-                 UINT8(this->z * 255.0f) };
+        const float gamma = 1.2f;
+        return std::make_tuple(
+            UINT8(std::pow(x, gamma) * 255.0f),
+            UINT8(std::pow(y, gamma) * 255.0f),
+            UINT8(std::pow(z, gamma) * 255.0f)
+        );
     }
 };
 
@@ -88,7 +98,7 @@ class pixelbuffer_t
 public:
     int width;
     int height;
-    uint8_t *pixels;
+    std::unique_ptr<uint8_t[]> pixels;
 
     pixelbuffer_t(int width, int height)
         : width(width)
@@ -109,22 +119,17 @@ public:
         }
     }
 
-    ~pixelbuffer_t()
-    {
-        delete[] pixels;
-    }
-
     uint8_t *data()
     {
-        return pixels;
+        return pixels.get();
     }
 
     void set(int x, int y, color_t color)
     {
         uint8_t *pixel = &pixels[(x + y * this->width) * 3];
-        std::array<uint8_t, 3> rgb = color.toRGB();
-        pixel[0] = rgb[0];
-        pixel[1] = rgb[1];
-        pixel[2] = rgb[2];
+        auto [r, g, b] = color.toRGB();
+        pixel[0] = r;
+        pixel[1] = g;
+        pixel[2] = b;
     }
 };

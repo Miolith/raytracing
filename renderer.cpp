@@ -20,8 +20,9 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
 {
     if (max_depth <= 0)
         return color_t(0.0f, 0.0f, 0.0f);
+
     float t_min = MAXFLOAT;
-    auto a = 0.5 + 0.5 * (ray.direction.y);
+    auto a = 0.5 + 0.5 * (ray.direction.normalize().y);
     auto color =
         (1.0f - a) * color_t(1.0f, 1.0f, 1.0f) + a * color_t(0.5f, 0.7f, 1.0f);
 
@@ -42,9 +43,9 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
         linalg::vec3 normal = object->shape.normal(hit_point, object->position);
         color = 0.5f
                 * rayColor(
-                    Ray{ hit_point, linalg::random_on_hemisphere(normal) },
-                    max_depth - 1)
-            + 0.5f * object->material.color;
+                    Ray{ hit_point, normal + linalg::random() },
+                    max_depth - 1
+                );
         break;
     }
     return color;

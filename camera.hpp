@@ -1,5 +1,5 @@
 #pragma once
-#include "vec3.hpp"
+#include "linalg.hpp"
 
 struct Camera
 {

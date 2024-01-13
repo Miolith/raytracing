@@ -1,6 +1,6 @@
 # Variables
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++23 -g
+CXXFLAGS = -Wall -Wextra -std=c++23 -g -Wno-unused-parameter -Wno-missing-field-initializers
 
 # Files
 SRC = scene.cpp sphere.cpp renderer.cpp camera.cpp ground.cpp main.cpp

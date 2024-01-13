@@ -2,7 +2,7 @@
 #include <array>
 
 #include "displayTools.hpp"
-#include "vec3.hpp"
+#include "linalg.hpp"
 
 class Shape
 {

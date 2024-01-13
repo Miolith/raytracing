@@ -159,7 +159,8 @@ namespace linalg
 
     inline vec3 random()
     {
-        return vec3(random_float(), random_float(), random_float());
+        return vec3(random_float(-1, 1), random_float(-1, 1),
+                    random_float(-1, 1));
     }
 
     inline vec3 random_on_hemisphere(const vec3 &normal)

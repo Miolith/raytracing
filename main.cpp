@@ -9,7 +9,7 @@ int main()
 
     Sphere sphere(1.0f);
     DefaultMaterial material(RED);
-    linalg::vec3 position(0.0f, 0.0f, -3.0f);
+    linalg::vec3 position(0.0f, 0.5f, -3.0f);
     auto obj1 = Object(sphere, material, position);
     scene.add(obj1);
 
