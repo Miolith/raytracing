@@ -14,15 +14,6 @@ Renderer::Renderer(Scene &scene, Camera &camera)
     , framebuffer(camera.screenWidth, camera.screenHeight)
 {}
 
-Renderer::Renderer(Scene &scene, Camera &camera, int max_depth,
-                   int samples_per_pixel)
-    : scene(scene)
-    , camera(camera)
-    , max_depth(max_depth)
-    , samples_per_pixel(samples_per_pixel)
-    , framebuffer(camera.screenWidth, camera.screenHeight)
-{}
-
 color_t Renderer::rayColor(Ray ray, int max_depth)
 {
     if (max_depth <= 0)
@@ -59,32 +50,36 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
 void Renderer::render()
 {
     float aspect_ratio = FLOAT(camera.screenWidth) / FLOAT(camera.screenHeight);
+    int image_height = camera.screenHeight;
     int image_width = camera.screenWidth;
 
-    int image_height = static_cast<int>(image_width / aspect_ratio);
-    image_height = std::max(image_height, 1);
+    auto center = camera.position;
 
-    // Camera
-    float viewport_height = 2.0;
-    float viewport_width =
-        viewport_height * (FLOAT(image_width) / image_height);
-    auto camera_center = linalg::vec3();
+    // Determine viewport dimensions.
+    auto focal_length = (camera.position - camera.lookat).length();
+    auto theta = camera.fov * M_PI / 180;
+    auto h = tan(theta/2);
+    auto viewport_height = 2 * h * focal_length;
+    auto viewport_width = viewport_height * aspect_ratio;
 
-    // Calculate the vectors across the horizontal and down the vertical
-    // viewport edges.
-    auto viewport_u = linalg::vec3(viewport_width, 0, 0);
-    auto viewport_v = linalg::vec3(0, -viewport_height, 0);
+    // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+    auto w = (camera.position - camera.lookat).normalize();
+    auto u = (cross(camera.vup, w)).normalize();
+    auto v = cross(w, u);
+
+    // Calculate the vectors across the horizontal and down the vertical viewport edges.
+    linalg::vec3 viewport_u = viewport_width * u;    // Vector across viewport horizontal edge
+    linalg::vec3 viewport_v = viewport_height * -v;  // Vector down viewport vertical edge
 
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
     auto pixel_delta_u = viewport_u / image_width;
     auto pixel_delta_v = viewport_v / image_height;
 
     // Calculate the location of the upper left pixel.
-    auto viewport_upper_left = camera_center
-        - linalg::vec3(0, 0, camera.focal_length) - viewport_u / 2
-        - viewport_v / 2;
-    auto pixel00_loc =
-        viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5f;
+    auto viewport_upper_left = center - (focal_length * w) - viewport_u/2 - viewport_v/2;
+    auto pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+    auto camera_center = camera.position;
 
     for (auto [x, y] :
          std::views::cartesian_product(std::views::iota(0, image_width),

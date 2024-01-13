@@ -18,8 +18,16 @@ int main()
     linalg::vec3 groundPosition(0.0f, -100.5f, -5.0f);
     auto obj = Object(ground, material2, groundPosition);
     scene.add(obj);
+
     Camera camera(480, 640);
+    camera.position = { -2.0f, 2.0f, 1.0f };
+    camera.lookat = { 0.0f, 0.0f, -3.0f };
+    camera.vup = { 0.0f, 1.0f, 0.0f };
+    camera.fov = 90.0f;
+
     Renderer renderer(scene, camera);
+    renderer.max_depth = 50;
+    renderer.samples_per_pixel = 100;
 
     renderer.render();
 

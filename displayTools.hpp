@@ -2,8 +2,8 @@
 
 #include <array>
 #include <cstdint>
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "linalg.hpp"
 
@@ -85,11 +85,9 @@ public:
     std::tuple<uint8_t, uint8_t, uint8_t> toRGB()
     {
         const float gamma = 1.2f;
-        return std::make_tuple(
-            UINT8(std::pow(x, gamma) * 255.0f),
-            UINT8(std::pow(y, gamma) * 255.0f),
-            UINT8(std::pow(z, gamma) * 255.0f)
-        );
+        return std::make_tuple(UINT8(std::pow(x, gamma) * 255.0f),
+                               UINT8(std::pow(y, gamma) * 255.0f),
+                               UINT8(std::pow(z, gamma) * 255.0f));
     }
 };
 

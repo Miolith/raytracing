@@ -15,17 +15,14 @@ struct Ray
 
 class Renderer
 {
-private:
+public:
     Scene &scene;
     Camera &camera;
     int max_depth = 50;
     int samples_per_pixel = 100;
     pixelbuffer_t framebuffer;
 
-public:
     Renderer(Scene &scene, Camera &camera);
-    Renderer(Scene &scene, Camera &camera, int max_depth,
-             int samples_per_pixel);
     color_t rayColor(Ray ray, int depth);
     void render();
     void save(std::string filename);
