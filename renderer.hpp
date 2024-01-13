@@ -7,18 +7,20 @@
 #include "displayTools.hpp"
 #include "scene.hpp"
 
+struct Ray
+{
+    linalg::vec3 origin;
+    linalg::vec3 direction;
+};
+
 class Renderer
 {
 private:
     Scene &scene;
     Camera &camera;
+    int max_depth = 50;
+    int samples_per_pixel = 100;
     pixelbuffer_t framebuffer;
-    // ray
-    struct Ray
-    {
-        linalg::vec3 origin;
-        linalg::vec3 direction;
-    } ray;
 
 public:
     Renderer(Scene &scene, Camera &camera);

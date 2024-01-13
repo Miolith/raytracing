@@ -85,11 +85,18 @@ void Renderer::render()
     {
         for (int x = 0; x < framebuffer.width; x++)
         {
-            auto pixel_loc =
-                pixel00_loc + pixel_delta_u * x + pixel_delta_v * y;
-            auto ray_direction = pixel_loc - camera_center;
-            auto ray = Ray{ camera_center, ray_direction };
-            color_t color = rayColor(ray, 30);
+            color_t color = color_t(0.0f, 0.0f, 0.0f);
+            for(int s = 0; s < samples_per_pixel; s++)
+            {
+                auto pixel_loc =
+                    pixel00_loc + pixel_delta_u * (x + linalg::random_float())
+                    + pixel_delta_v * (y + linalg::random_float());
+                auto ray_direction = pixel_loc - camera_center;
+                auto ray = Ray{ camera_center, ray_direction };
+                color += rayColor(ray, this->max_depth);
+
+            }
+            color /= samples_per_pixel;
             framebuffer.set(x, y, color);
         }
     }

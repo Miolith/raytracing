@@ -78,6 +78,30 @@ namespace linalg
             return vec3(this->x + scalar, this->y + scalar, this->z + scalar);
         }
 
+        vec3 operator/=(float scalar)
+        {
+            this->x /= scalar;
+            this->y /= scalar;
+            this->z /= scalar;
+            return *this;
+        }
+
+        vec3 operator*=(float scalar)
+        {
+            this->x *= scalar;
+            this->y *= scalar;
+            this->z *= scalar;
+            return *this;
+        }
+
+        vec3 operator+=(vec3 other)
+        {
+            this->x += other.x;
+            this->y += other.y;
+            this->z += other.z;
+            return *this;
+        }
+
         float length()
         {
             return std::sqrt(this->x * this->x + this->y * this->y
