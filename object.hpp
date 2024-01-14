@@ -41,25 +41,19 @@ public:
     Material(color_t color)
         : color(color)
     {}
-    virtual float BRDF(linalg::vec3 normal) = 0;
+    virtual linalg::vec3 scatter(linalg::vec3 &hitPoint, linalg::vec3 &normal) = 0;
 };
 
 class Lambertian : public Material
 {
 public:
-    float BRDF(linalg::vec3 normal);
-};
-
-class DefaultMaterial : public Material
-{
-public:
-    DefaultMaterial(color_t color)
+    Lambertian(color_t color)
         : Material(color)
     {}
 
-    float BRDF(linalg::vec3 normal)
+    linalg::vec3 scatter(linalg::vec3 &hitPoint, linalg::vec3 &normal)
     {
-        return 1.0f;
+        return normal + linalg::vec3::random();
     }
 };
 

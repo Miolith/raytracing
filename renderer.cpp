@@ -40,7 +40,7 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
         linalg::vec3 hit_point = ray.origin + ray.direction * t;
         linalg::vec3 normal = object->shape.normal(hit_point, object->position);
         color = 0.5f
-            * rayColor(Ray{ hit_point, normal + linalg::random() },
+            * rayColor(Ray{hit_point, object->material.scatter(hit_point, normal)},
                        max_depth - 1);
         break;
     }
@@ -53,12 +53,12 @@ void Renderer::render()
     int image_height = camera.screenHeight;
     int image_width = camera.screenWidth;
 
-    auto center = camera.position;
+    linalg::vec3 center = camera.position;
 
     // Determine viewport dimensions.
     auto focal_length = (camera.position - camera.lookat).length();
     auto theta = camera.fov * M_PI / 180;
-    auto h = tan(theta/2);
+    auto h = tan(theta / 2);
     auto viewport_height = 2 * h * focal_length;
     auto viewport_width = viewport_height * aspect_ratio;
 
@@ -67,23 +67,28 @@ void Renderer::render()
     auto u = (cross(camera.vup, w)).normalize();
     auto v = cross(w, u);
 
-    // Calculate the vectors across the horizontal and down the vertical viewport edges.
-    linalg::vec3 viewport_u = viewport_width * u;    // Vector across viewport horizontal edge
-    linalg::vec3 viewport_v = viewport_height * -v;  // Vector down viewport vertical edge
+    // Calculate the vectors across the horizontal and down the vertical
+    // viewport edges.
+    linalg::vec3 viewport_u =
+        viewport_width * u; // Vector across viewport horizontal edge
+    linalg::vec3 viewport_v =
+        viewport_height * -v; // Vector down viewport vertical edge
 
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
-    auto pixel_delta_u = viewport_u / image_width;
-    auto pixel_delta_v = viewport_v / image_height;
+    linalg::vec3 pixel_delta_u = viewport_u / image_width;
+    linalg::vec3 pixel_delta_v = viewport_v / image_height;
 
     // Calculate the location of the upper left pixel.
-    auto viewport_upper_left = center - (focal_length * w) - viewport_u/2 - viewport_v/2;
-    auto pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+    linalg::vec3 viewport_upper_left =
+        center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+    linalg::vec3 pixel00_loc =
+        viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
     auto camera_center = camera.position;
 
-    for (auto [x, y] :
-         std::views::cartesian_product(std::views::iota(0, image_width),
-                                       std::views::iota(0, image_height)))
+    for (auto [y, x] :
+         std::views::cartesian_product(std::views::iota(0, image_height),
+                                       std::views::iota(0, image_width)))
     {
         color_t color = color_t(0.0f, 0.0f, 0.0f);
         for (int s = 0; s < samples_per_pixel; s++)

@@ -6,6 +6,17 @@
 
 namespace linalg
 {
+    inline float random_float()
+    {
+        static std::uniform_real_distribution<float> distribution(0.0, 1.0);
+        static std::mt19937 generator;
+        return distribution(generator);
+    }
+
+    inline float random_float(float min, float max)
+    {
+        return min + (max - min) * random_float();
+    }
 
     struct vec3
     {
@@ -78,20 +89,16 @@ namespace linalg
             return vec3(this->x + scalar, this->y + scalar, this->z + scalar);
         }
 
-        vec3 operator/=(float scalar)
-        {
-            this->x /= scalar;
-            this->y /= scalar;
-            this->z /= scalar;
-            return *this;
-        }
-
-        vec3 operator*=(float scalar)
+        void operator*=(float scalar)
         {
             this->x *= scalar;
             this->y *= scalar;
             this->z *= scalar;
-            return *this;
+        }
+
+        void operator/=(float scalar)
+        {
+            *this *= 1.0f / scalar;
         }
 
         vec3 operator+=(vec3 other)
@@ -119,6 +126,12 @@ namespace linalg
             os << "vec3(" << this->x << ", " << this->y << ", " << this->z
                << ")";
             return os;
+        }
+
+        static vec3 random()
+        {
+            return vec3(random_float(-1, 1), random_float(-1, 1),
+                        random_float(-1, 1));
         }
     };
 
@@ -167,34 +180,6 @@ namespace linalg
     {
         return vec3(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z,
                     u.x * v.y - u.y * v.x);
-    }
-
-    inline float random_float()
-    {
-        static std::uniform_real_distribution<float> distribution(0.0, 1.0);
-        static std::mt19937 generator;
-        return distribution(generator);
-    }
-
-    inline float random_float(float min, float max)
-    {
-        return min + (max - min) * random_float();
-    }
-
-    inline vec3 random()
-    {
-        return vec3(random_float(-1, 1), random_float(-1, 1),
-                    random_float(-1, 1));
-    }
-
-    inline vec3 random_on_hemisphere(const vec3 &normal)
-    {
-        vec3 on_unit_sphere = random().normalize();
-        if (dot(on_unit_sphere, normal)
-            > 0.0f) // In the same hemisphere as the normal
-            return on_unit_sphere;
-        else
-            return -on_unit_sphere;
     }
 
     class mat3
