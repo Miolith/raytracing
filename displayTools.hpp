@@ -10,16 +10,7 @@
 #define FLOAT static_cast<float>
 #define UINT8 static_cast<uint8_t>
 
-#define RED color_t(1.0f, 0.0f, 0.0f)
-#define GREEN color_t(0.0f, 1.0f, 0.0f)
-#define BLUE color_t(0.0f, 0.0f, 1.0f)
-#define WHITE color_t(1.0f, 1.0f, 1.0f)
-#define BLACK color_t(0.0f, 0.0f, 0.0f)
-#define YELLOW color_t(1.0f, 1.0f, 0.0f)
-#define CYAN color_t(0.0f, 1.0f, 1.0f)
-#define MAGENTA color_t(1.0f, 0.0f, 1.0f)
-#define GRAY color_t(0.5f, 0.5f, 0.5f)
-#define BEIGE color_t(0.8f, 0.6f, 0.6f)
+
 
 class color_t : public linalg::vec3
 {
@@ -90,6 +81,19 @@ public:
                                UINT8(std::pow(z, gamma) * 255.0f));
     }
 };
+
+static const color_t RED = color_t(1.0f, 0.0f, 0.0f);
+static const color_t GREEN = color_t(0.0f, 1.0f, 0.0f);
+static const color_t BLUE = color_t(0.0f, 0.0f, 1.0f);
+static const color_t WHITE = color_t(1.0f, 1.0f, 1.0f);
+static const color_t BLACK = color_t(0.0f, 0.0f, 0.0f);
+static const color_t YELLOW = color_t(1.0f, 1.0f, 0.0f);
+static const color_t CYAN = color_t(0.0f, 1.0f, 1.0f);
+static const color_t MAGENTA = color_t(1.0f, 0.0f, 1.0f);
+static const color_t GRAY = color_t(0.5f, 0.5f, 0.5f);
+static const color_t BEIGE = color_t(0.8f, 0.6f, 0.6f);
+static const color_t SUNSET = color_t(225,	145, 190);
+static const color_t SUNSET2 = color_t(249, 231, 207);
 
 class pixelbuffer_t
 {
