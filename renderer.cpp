@@ -20,8 +20,8 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
         return color_t(0.0f, 0.0f, 0.0f);
 
     float t_min = MAXFLOAT;
-    auto a = 0.5 + 0.5 * (ray.direction.normalize().y);
-    auto color =
+    float a = 0.5 + 0.5 * (ray.direction.normalize().y);
+    color_t color =
         (1.0f - a) * color_t(1.0f, 1.0f, 1.0f) + a * color_t(0.5f, 0.7f, 1.0f);
 
     for (Object *object : scene.getObjects())
@@ -39,7 +39,7 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
 
         linalg::vec3 hit_point = ray.origin + ray.direction * t;
         linalg::vec3 normal = object->shape.normal(hit_point, object->position);
-        color = 0.5f
+        color = object->material.color
             * rayColor(Ray{hit_point, object->material.scatter(hit_point, normal)},
                        max_depth - 1);
         break;

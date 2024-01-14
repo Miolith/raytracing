@@ -19,7 +19,7 @@
 #define CYAN color_t(0.0f, 1.0f, 1.0f)
 #define MAGENTA color_t(1.0f, 0.0f, 1.0f)
 #define GRAY color_t(0.5f, 0.5f, 0.5f)
-#define BEIGE color_t(0.9f, 0.9f, 0.78f)
+#define BEIGE color_t(0.8f, 0.6f, 0.6f)
 
 class color_t : public linalg::vec3
 {
@@ -84,7 +84,7 @@ public:
 
     std::tuple<uint8_t, uint8_t, uint8_t> toRGB()
     {
-        const float gamma = 1.2f;
+        const float gamma = 1.0f;
         return std::make_tuple(UINT8(std::pow(x, gamma) * 255.0f),
                                UINT8(std::pow(y, gamma) * 255.0f),
                                UINT8(std::pow(z, gamma) * 255.0f));
