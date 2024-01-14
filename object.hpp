@@ -41,7 +41,7 @@ public:
     Material(color_t color)
         : color(color)
     {}
-    virtual linalg::vec3 scatter(linalg::vec3 &hitPoint, linalg::vec3 &normal) = 0;
+    virtual linalg::vec3 scatter(linalg::vec3 &rayDir, linalg::vec3 &normal) = 0;
 };
 
 class Lambertian : public Material
@@ -51,9 +51,40 @@ public:
         : Material(color)
     {}
 
-    linalg::vec3 scatter(linalg::vec3 &hitPoint, linalg::vec3 &normal)
+    linalg::vec3 scatter(linalg::vec3 &rayDir, linalg::vec3 &normal)
     {
         return normal + linalg::vec3::random();
+    }
+};
+
+class Metal : public Material
+{
+public:
+    float fuzz = 0.0f;
+    Metal(color_t color)
+        : Material(color)
+    {}
+
+    Metal()
+        : Material(color_t(1.0f, 1.0f, 1.0f))
+    {}
+
+    Metal(color_t color, float fuzz)
+        : Material(color)
+        , fuzz(fuzz)
+    {}
+
+    Metal(float fuzz)
+        : Material(color_t(1.0f, 1.0f, 1.0f))
+        , fuzz(fuzz)
+    {}
+
+    linalg::vec3 scatter(linalg::vec3 &rayDir, linalg::vec3 &normal)
+    {
+        auto unit_direction = rayDir.normalize();
+        linalg::vec3 return_vector = unit_direction - 2.0f * dot(unit_direction, normal) * normal;
+        return_vector += fuzz * linalg::vec3::random();
+        return return_vector;
     }
 };
 

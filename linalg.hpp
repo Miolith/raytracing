@@ -3,6 +3,8 @@
 #include <cmath>
 #include <iostream>
 #include <random>
+#include <unordered_map>
+#include <memory>
 
 namespace linalg
 {
@@ -79,6 +81,12 @@ namespace linalg
             return vec3(this->x * scalar, this->y * scalar, this->z * scalar);
         }
 
+        vec3 operator*(vec3 other)
+        {
+            return vec3(this->x * other.x, this->y * other.y,
+                        this->z * other.z);
+        }
+
         vec3 operator-()
         {
             return vec3(-this->x, -this->y, -this->z);
@@ -131,7 +139,17 @@ namespace linalg
         static vec3 random()
         {
             return vec3(random_float(-1, 1), random_float(-1, 1),
-                        random_float(-1, 1));
+                        random_float(-1, 1)).normalize();
+        }
+
+        static vec3 dot(vec3 &u, vec3 &v)
+        {
+            return u.x * v.x + u.y * v.y + u.z * v.z;
+        }
+
+        static vec3 reflect(vec3 &v, vec3 &n)
+        {
+            return v - vec3::dot(v, n) * n * 2.0f;
         }
     };
 

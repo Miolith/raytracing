@@ -40,7 +40,7 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
         linalg::vec3 hit_point = ray.origin + ray.direction * t;
         linalg::vec3 normal = object->shape.normal(hit_point, object->position);
         color = object->material.color
-            * rayColor(Ray{hit_point, object->material.scatter(hit_point, normal)},
+            * rayColor(Ray{hit_point, object->material.scatter(ray.direction, normal)},
                        max_depth - 1);
         break;
     }

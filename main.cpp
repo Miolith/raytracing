@@ -10,14 +10,20 @@ int main()
     Sphere sphere(1.0f);
     Lambertian material(BEIGE);
     linalg::vec3 position(0.0f, 0.5f, -3.0f);
-    auto obj1 = Object(sphere, material, position);
-    scene.add(obj1);
+    Object opaque_sphere{sphere, material, position};
+    scene.add(opaque_sphere);
 
     Sphere ground{ 100.0f };
-    Lambertian material2({ 0.5f, 0.5f, 0.5f });
+    Metal material2({ 0.5f, 0.5f, 0.5f }, 0.2f);
     linalg::vec3 groundPosition(0.0f, -100.5f, -5.0f);
     auto obj = Object(ground, material2, groundPosition);
     scene.add(obj);
+
+    Sphere metal_sphere{ 1.0f };
+    Metal material3{};
+    linalg::vec3 metal_position(2.5f, 0.5f, -3.0f);
+    Object metal_obj{ metal_sphere, material3, metal_position };
+    scene.add(metal_obj);
 
     Camera camera(480, 640);
     camera.position = { -2.0f, 2.0f, 1.0f };
