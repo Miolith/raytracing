@@ -18,12 +18,9 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
 {
     if (max_depth <= 0)
         return color_t(0.0f, 0.0f, 0.0f);
-    
-    float t_min = std::numeric_limits<float>::max();
 
-    float a = 0.5 + 0.5 * (ray.direction.normalize().y);
-    color_t color =
-        (1.0f - a) * SUNSET2 + a * SUNSET;
+    float t_min = std::numeric_limits<float>::max();
+    Object *hit_object = nullptr;
 
     for (Object *object : scene.getObjects())
     {
@@ -35,16 +32,25 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
 
         if (t_min < t)
             continue;
-        
-        t_min = t;
 
-        linalg::vec3 hit_point = ray.origin + ray.direction * t;
-        linalg::vec3 normal = object->shape.normal(hit_point, object->position);
-        color = object->material.color
-            * rayColor(Ray{hit_point, object->material.scatter(ray.direction, normal)},
-                       max_depth - 1);
-        break;
+        t_min = t;
+        hit_object = object;
     }
+
+    if (hit_object == nullptr)
+    {
+        float a = 0.5 + 0.5 * (ray.direction.normalize().y);
+        return (1.0f - a) * SUNSET2 + a * SUNSET;
+    }
+
+    linalg::vec3 hit_point = ray.origin + ray.direction * t_min;
+    linalg::vec3 normal =
+        hit_object->shape.normal(hit_point, hit_object->position);
+    color_t color = hit_object->material.color
+        * rayColor(Ray{ hit_point,
+                        hit_object->material.scatter(ray.direction, normal) },
+                   max_depth - 1);
+
     return color;
 }
 

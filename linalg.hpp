@@ -2,9 +2,9 @@
 #include <array>
 #include <cmath>
 #include <iostream>
+#include <memory>
 #include <random>
 #include <unordered_map>
-#include <memory>
 
 namespace linalg
 {
@@ -139,7 +139,8 @@ namespace linalg
         static vec3 random()
         {
             return vec3(random_float(-1, 1), random_float(-1, 1),
-                        random_float(-1, 1)).normalize();
+                        random_float(-1, 1))
+                .normalize();
         }
 
         static vec3 dot(vec3 &u, vec3 &v)
@@ -189,7 +190,7 @@ namespace linalg
         return vec3(v.x + t, v.y + t, v.z + t);
     }
 
-    inline vec3 operator-(const vec3& v)
+    inline vec3 operator-(const vec3 &v)
     {
         return vec3(-v.x, -v.y, -v.z);
     }
@@ -209,8 +210,8 @@ namespace linalg
     {
         float cos_theta = fmin(dot(-uv, n), 1.0f);
         vec3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
-        vec3 r_out_parallel = -sqrt(fabs(1.0f - dot(r_out_perp, r_out_perp)))
-                               * n;
+        vec3 r_out_parallel =
+            -sqrt(fabs(1.0f - dot(r_out_perp, r_out_perp))) * n;
         return r_out_perp + r_out_parallel;
     }
 

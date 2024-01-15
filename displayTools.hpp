@@ -10,8 +10,6 @@
 #define FLOAT static_cast<float>
 #define UINT8 static_cast<uint8_t>
 
-
-
 class color_t : public linalg::vec3
 {
 public:
@@ -92,7 +90,7 @@ static const color_t CYAN = color_t(0.0f, 1.0f, 1.0f);
 static const color_t MAGENTA = color_t(1.0f, 0.0f, 1.0f);
 static const color_t GRAY = color_t(0.5f, 0.5f, 0.5f);
 static const color_t BEIGE = color_t(0.8f, 0.6f, 0.6f);
-static const color_t SUNSET = color_t(225,	145, 190);
+static const color_t SUNSET = color_t(225, 145, 190);
 static const color_t SUNSET2 = color_t(249, 231, 207);
 
 class pixelbuffer_t
