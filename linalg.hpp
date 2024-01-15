@@ -189,6 +189,11 @@ namespace linalg
         return vec3(v.x + t, v.y + t, v.z + t);
     }
 
+    inline vec3 operator-(const vec3& v)
+    {
+        return vec3(-v.x, -v.y, -v.z);
+    }
+
     inline float dot(const vec3 &u, const vec3 &v)
     {
         return u.x * v.x + u.y * v.y + u.z * v.z;
@@ -198,6 +203,20 @@ namespace linalg
     {
         return vec3(u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z,
                     u.x * v.y - u.y * v.x);
+    }
+
+    inline vec3 refract(const vec3 &uv, const vec3 &n, float etai_over_etat)
+    {
+        float cos_theta = fmin(dot(-uv, n), 1.0f);
+        vec3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
+        vec3 r_out_parallel = -sqrt(fabs(1.0f - dot(r_out_perp, r_out_perp)))
+                               * n;
+        return r_out_perp + r_out_parallel;
+    }
+
+    inline vec3 reflect(const vec3 &v, const vec3 &n)
+    {
+        return v - 2.0f * dot(v, n) * n;
     }
 
     class mat3

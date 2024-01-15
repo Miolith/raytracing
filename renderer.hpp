@@ -23,7 +23,7 @@ public:
     pixelbuffer_t framebuffer;
 
     Renderer(Scene &scene, Camera &camera);
-    color_t rayColor(Ray ray, int max_depth, float &t_min);
+    color_t rayColor(Ray ray, int max_depth);
     void render();
     void save(std::string filename);
 };

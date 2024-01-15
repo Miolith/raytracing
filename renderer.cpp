@@ -14,10 +14,12 @@ Renderer::Renderer(Scene &scene, Camera &camera)
     , framebuffer(camera.screenWidth, camera.screenHeight)
 {}
 
-color_t Renderer::rayColor(Ray ray, int max_depth, float &t_min)
+color_t Renderer::rayColor(Ray ray, int max_depth)
 {
     if (max_depth <= 0)
         return color_t(0.0f, 0.0f, 0.0f);
+    
+    float t_min = std::numeric_limits<float>::max();
 
     float a = 0.5 + 0.5 * (ray.direction.normalize().y);
     color_t color =
@@ -31,16 +33,16 @@ color_t Renderer::rayColor(Ray ray, int max_depth, float &t_min)
         if (t < 0.0f)
             continue;
 
-        t_min = std::min(t, t_min);
-
         if (t_min < t)
             continue;
+        
+        t_min = t;
 
         linalg::vec3 hit_point = ray.origin + ray.direction * t;
         linalg::vec3 normal = object->shape.normal(hit_point, object->position);
         color = object->material.color
             * rayColor(Ray{hit_point, object->material.scatter(ray.direction, normal)},
-                       max_depth - 1, t_min);
+                       max_depth - 1);
         break;
     }
     return color;
@@ -97,9 +99,8 @@ void Renderer::render()
                 + pixel_delta_v * (y + linalg::random_float());
             auto ray_direction = pixel_loc - camera_center;
             auto ray = Ray{ camera_center, ray_direction };
-            float t_min = std::numeric_limits<float>::max();
 
-            color += rayColor(ray, this->max_depth, t_min);
+            color += rayColor(ray, this->max_depth);
         }
         color /= samples_per_pixel;
         framebuffer.set(x, y, color);

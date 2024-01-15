@@ -19,8 +19,14 @@ int main()
     Object metal_obj{ metal_sphere, material3, metal_position };
     scene.add(metal_obj);
 
+    Sphere transparent_sphere{ 1.0f };
+    Dielectric material_d{1.1f, 0.2f};
+    linalg::vec3 trans_position(-2.5f, 0.5f, -3.0f);
+    Object transparent_obj{ transparent_sphere, material_d, trans_position };
+    scene.add(transparent_obj);
+
     Sphere ground{ 100.0f };
-    Metal material2({ 0.5f, 0.5f, 0.5f }, 0.2f);
+    Metal material2({ 0.9f, 0.9f, 1.0f }, 0.05f);
     linalg::vec3 groundPosition(0.0f, -100.5f, -5.0f);
     auto obj = Object(ground, material2, groundPosition);
     scene.add(obj);

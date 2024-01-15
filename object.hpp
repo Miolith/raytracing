@@ -88,6 +88,65 @@ public:
     }
 };
 
+class Dielectric : public Material
+{
+public:
+    float refraction_index;
+    float fuzz = 0.0f;
+
+    Dielectric(color_t color, float refraction_index)
+        : Material(color)
+        , refraction_index(refraction_index)
+    {}
+
+    Dielectric(float refraction_index)
+        : Material(color_t(1.0f, 1.0f, 1.0f))
+        , refraction_index(refraction_index)
+    {}
+
+    Dielectric(color_t color, float refraction_index, float fuzz)
+        : Material(color)
+        , refraction_index(refraction_index)
+        , fuzz(fuzz)
+    {}
+
+    Dielectric(float refraction_index, float fuzz)
+        : Material(color_t(1.0f, 1.0f, 1.0f))
+        , refraction_index(refraction_index)
+        , fuzz(fuzz)
+    {}
+
+    float reflectance(float cosine, float ref_idx)
+    {
+        auto r0 = (1 - ref_idx) / (1 + ref_idx);
+        r0 = r0 * r0;
+        return r0 + (1 - r0) * pow((1 - cosine), 5);
+    }
+
+    linalg::vec3 scatter(linalg::vec3 &rayDir, linalg::vec3 &normal)
+    {
+        linalg::vec3 unit_direction = rayDir.normalize();
+        bool front_face = dot(unit_direction, normal) < 0.0f;
+        float refraction_ratio = front_face ? 1.0f / refraction_index : refraction_index;
+        linalg::vec3 true_normal = front_face ? normal : -normal;
+        
+        float cos_theta = fmin(dot(-unit_direction, true_normal), 1.0f);
+        float sin_theta = sqrt(1.0f - cos_theta * cos_theta);
+
+        bool cannot_refract = refraction_ratio * sin_theta > 1.0f;
+
+        linalg::vec3 return_vector;
+        
+        if (cannot_refract || reflectance(cos_theta, refraction_ratio) > linalg::random_float())
+            return_vector = linalg::reflect(unit_direction, true_normal);
+        else
+            return_vector = linalg::refract(unit_direction, true_normal, refraction_ratio);
+
+        return_vector += fuzz * linalg::vec3::random();
+        return return_vector;
+    }
+};
+
 class Object
 {
 public:
