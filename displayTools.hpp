@@ -34,19 +34,6 @@ public:
         : vec3(r, g, b)
     {}
 
-    float r()
-    {
-        return this->x;
-    }
-    float g()
-    {
-        return this->y;
-    }
-    float b()
-    {
-        return this->z;
-    }
-
     color_t(std::string hex)
     {
         if (hex[0] == '#')

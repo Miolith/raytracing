@@ -19,7 +19,7 @@ int main()
     Object metal_obj{ metal_sphere, material3, metal_position };
     scene.add(metal_obj);
 
-    Sphere transparent_sphere{ 1.0f };
+    Sphere transparent_sphere{ -1.0f };
     Dielectric material_d{ 1.2f, 0.2f };
     linalg::vec3 trans_position(-2.5f, 0.5f, -3.0f);
     Object transparent_obj{ transparent_sphere, material_d, trans_position };

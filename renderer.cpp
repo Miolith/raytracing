@@ -63,10 +63,9 @@ void Renderer::render()
     linalg::vec3 center = camera.position;
 
     // Determine viewport dimensions.
-    auto focal_length = (camera.position - camera.lookat).length();
     auto theta = camera.fov * M_PI / 180;
     auto h = tan(theta / 2);
-    auto viewport_height = 2 * h * focal_length;
+    auto viewport_height = 2 * h * camera.focus_distance;
     auto viewport_width = viewport_height * aspect_ratio;
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
@@ -87,11 +86,13 @@ void Renderer::render()
 
     // Calculate the location of the upper left pixel.
     linalg::vec3 viewport_upper_left =
-        center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+        center - (camera.focus_distance * w) - viewport_u / 2 - viewport_v / 2;
     linalg::vec3 pixel00_loc =
         viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
-    auto camera_center = camera.position;
+    float defocus_radius = camera.focus_distance * tan(camera.defocus_angle / 2);
+    linalg::vec3 defocus_disk_u = defocus_radius * u;
+    linalg::vec3 defocus_disk_v = defocus_radius * v;
 
     for (auto [y, x] :
          std::views::cartesian_product(std::views::iota(0, image_height),
@@ -100,11 +101,21 @@ void Renderer::render()
         color_t color = color_t(0.0f, 0.0f, 0.0f);
         for (int s = 0; s < samples_per_pixel; s++)
         {
-            auto pixel_loc = pixel00_loc
+            linalg::vec3 pixel_loc = pixel00_loc
                 + pixel_delta_u * (x + linalg::random_float())
                 + pixel_delta_v * (y + linalg::random_float());
-            auto ray_direction = pixel_loc - camera_center;
-            auto ray = Ray{ camera_center, ray_direction };
+
+            linalg::vec3 ray_origin = camera.position;
+
+            if (defocus_radius > 0.0f)
+            {
+                linalg::vec3 point = linalg::vec3::random_unit_disk();
+                ray_origin += point.x * defocus_disk_u
+                    + point.y * defocus_disk_v;
+            }
+
+            linalg::vec3 ray_direction = pixel_loc - ray_origin;
+            auto ray = Ray{ray_origin, ray_direction };
 
             color += rayColor(ray, this->max_depth);
         }

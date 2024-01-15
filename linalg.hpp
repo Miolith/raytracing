@@ -22,9 +22,9 @@ namespace linalg
 
     struct vec3
     {
-        float x;
-        float y;
-        float z;
+        union {float x, r;};
+        union {float y, g;};
+        union {float z, b;};
 
         vec3(float x, float y, float z)
             : x(x)
@@ -143,14 +143,14 @@ namespace linalg
                 .normalize();
         }
 
-        static vec3 dot(vec3 &u, vec3 &v)
+        static vec3 random_unit_disk()
         {
-            return u.x * v.x + u.y * v.y + u.z * v.z;
-        }
-
-        static vec3 reflect(vec3 &v, vec3 &n)
-        {
-            return v - vec3::dot(v, n) * n * 2.0f;
+            while (true)
+            {
+                auto p = vec3(random_float(-1, 1), random_float(-1, 1), 0);
+                if (p.x*p.x + p.y*p.y < 1)
+                    return p;
+            }
         }
     };
 
