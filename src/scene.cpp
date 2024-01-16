@@ -2,7 +2,7 @@
 
 #include <ranges>
 
-#include "object.hpp"
+#include "objects/object.hpp"
 
 Scene::Scene()
 {}

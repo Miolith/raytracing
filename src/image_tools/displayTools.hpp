@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "linalg.hpp"
+#include "../linalg/linalg.hpp"
 
 #define FLOAT static_cast<float>
 #define UINT8 static_cast<uint8_t>

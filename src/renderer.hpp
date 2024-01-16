@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "camera.hpp"
-#include "displayTools.hpp"
+#include "image_tools/displayTools.hpp"
 #include "scene.hpp"
 
 struct Ray

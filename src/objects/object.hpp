@@ -1,8 +1,8 @@
 #pragma once
 #include <array>
 
-#include "displayTools.hpp"
-#include "linalg.hpp"
+#include "../image_tools/displayTools.hpp"
+#include "../linalg/linalg.hpp"
 
 class Shape
 {

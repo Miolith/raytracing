@@ -1,5 +1,5 @@
 #pragma once
-#include "object.hpp"
+#include "objects/object.hpp"
 
 class Scene
 {

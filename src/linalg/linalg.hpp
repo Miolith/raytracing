@@ -22,9 +22,18 @@ namespace linalg
 
     struct vec3
     {
-        union {float x, r;};
-        union {float y, g;};
-        union {float z, b;};
+        union
+        {
+            float x, r;
+        };
+        union
+        {
+            float y, g;
+        };
+        union
+        {
+            float z, b;
+        };
 
         vec3(float x, float y, float z)
             : x(x)
@@ -148,7 +157,7 @@ namespace linalg
             while (true)
             {
                 auto p = vec3(random_float(-1, 1), random_float(-1, 1), 0);
-                if (p.x*p.x + p.y*p.y < 1)
+                if (p.x * p.x + p.y * p.y < 1)
                     return p;
             }
         }

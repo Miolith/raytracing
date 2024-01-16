@@ -6,7 +6,7 @@
 #include "camera.hpp"
 #include "scene.hpp"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include "../extern/stb/stb_image_write.h"
 
 Renderer::Renderer(Scene &scene, Camera &camera)
     : scene(scene)
@@ -90,7 +90,8 @@ void Renderer::render()
     linalg::vec3 pixel00_loc =
         viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
-    float defocus_radius = camera.focus_distance * tan(camera.defocus_angle / 2);
+    float defocus_radius =
+        camera.focus_distance * tan(camera.defocus_angle / 2);
     linalg::vec3 defocus_disk_u = defocus_radius * u;
     linalg::vec3 defocus_disk_v = defocus_radius * v;
 
@@ -110,12 +111,12 @@ void Renderer::render()
             if (defocus_radius > 0.0f)
             {
                 linalg::vec3 point = linalg::vec3::random_unit_disk();
-                ray_origin += point.x * defocus_disk_u
-                    + point.y * defocus_disk_v;
+                ray_origin +=
+                    point.x * defocus_disk_u + point.y * defocus_disk_v;
             }
 
             linalg::vec3 ray_direction = pixel_loc - ray_origin;
-            auto ray = Ray{ray_origin, ray_direction };
+            auto ray = Ray{ ray_origin, ray_direction };
 
             color += rayColor(ray, this->max_depth);
         }

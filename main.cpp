@@ -1,7 +1,7 @@
-#include "camera.hpp"
-#include "object.hpp"
-#include "renderer.hpp"
-#include "scene.hpp"
+#include "src/camera.hpp"
+#include "src/objects/object.hpp"
+#include "src/renderer.hpp"
+#include "src/scene.hpp"
 
 int main()
 {
@@ -43,7 +43,7 @@ int main()
 
     renderer.render();
 
-    renderer.save("image.jpg");
+    renderer.save("output/image.jpg");
 
     return 0;
 }
