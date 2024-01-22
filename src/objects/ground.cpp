@@ -3,7 +3,7 @@
 Ground::Ground()
 {}
 
-std::optional<float> Ground::hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection)
+std::optional<float> Ground::hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) const
 {
     // rayOrigin.y -= groundHeight;
     if (rayDirection.y < 0.001f)
@@ -17,7 +17,7 @@ std::optional<float> Ground::hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirecti
     return root;
 }
 
-linalg::vec3 Ground::normal(linalg::vec3 hitPoint, linalg::vec3 position)
+linalg::vec3 Ground::normal(const linalg::vec3 &hitPoint, const linalg::vec3 &position) const
 {
     return { 0.0f, 1.0f, 0.0f };
 }

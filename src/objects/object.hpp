@@ -8,9 +8,9 @@
 class Shape
 {
 public:
-    virtual std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) = 0;
-    virtual linalg::vec3 normal(linalg::vec3 hitPoint,
-                                linalg::vec3 position) = 0;
+    virtual std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) const = 0;
+    virtual linalg::vec3 normal(const linalg::vec3 &hitPoint,
+                                const linalg::vec3 &position) const = 0;
 };
 
 class Sphere : public Shape
@@ -20,8 +20,8 @@ private:
 
 public:
     Sphere(float radius);
-    std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
-    linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position);
+    std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) const override;
+    linalg::vec3 normal(const linalg::vec3 &hitPoint, const linalg::vec3 &position) const override;
 };
 
 class Ground : public Shape
@@ -31,8 +31,8 @@ private:
 
 public:
     Ground();
-    std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
-    linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position);
+    std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) const override;
+    linalg::vec3 normal(const linalg::vec3 &hitPoint, const linalg::vec3 &position) const override;
 };
 
 class Material
