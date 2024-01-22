@@ -1,23 +1,19 @@
-#include "objects/object.hpp"
+#include "object.hpp"
 
 Ground::Ground()
 {}
 
-float Ground::hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection)
+std::optional<float> Ground::hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection)
 {
     // rayOrigin.y -= groundHeight;
     if (rayDirection.y < 0.001f)
-    {
-        return -1.0f;
-    }
+        return std::nullopt;
+    
     float root = -rayOrigin.y / rayDirection.y;
 
     if (root < 0.001f)
-    {
-        return -1.0f;
-    }
+        return std::nullopt;
 
-    std::cout << "hit ground" << std::endl;
     return root;
 }
 

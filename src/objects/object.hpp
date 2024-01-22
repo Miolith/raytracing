@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <optional>
 
 #include "../image_tools/displayTools.hpp"
 #include "../linalg/linalg.hpp"
@@ -7,7 +8,7 @@
 class Shape
 {
 public:
-    virtual float hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) = 0;
+    virtual std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection) = 0;
     virtual linalg::vec3 normal(linalg::vec3 hitPoint,
                                 linalg::vec3 position) = 0;
 };
@@ -19,7 +20,7 @@ private:
 
 public:
     Sphere(float radius);
-    float hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
+    std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
     linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position);
 };
 
@@ -30,7 +31,7 @@ private:
 
 public:
     Ground();
-    float hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
+    std::optional<float> hit(linalg::vec3 rayOrigin, linalg::vec3 rayDirection);
     linalg::vec3 normal(linalg::vec3 hitPoint, linalg::vec3 position);
 };
 

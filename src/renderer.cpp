@@ -24,16 +24,16 @@ color_t Renderer::rayColor(Ray ray, int max_depth)
 
     for (Object *object : scene.getObjects())
     {
-        float t =
+        std::optional<float> t =
             object->shape.hit(ray.origin - object->position, ray.direction);
 
-        if (t < 0.0f)
+        if (!t.has_value())
             continue;
 
-        if (t_min < t)
+        if (t_min < t.value())
             continue;
 
-        t_min = t;
+        t_min = t.value();
         hit_object = object;
     }
 
