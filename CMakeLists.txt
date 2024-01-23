@@ -4,6 +4,7 @@ project(RayTracing)
 set(OPT_FLAGS "-Ofast -march=native -fno-rtti")
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (MSVC)
     add_compile_options(/W4 /WX)
