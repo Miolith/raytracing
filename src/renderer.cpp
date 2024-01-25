@@ -2,12 +2,13 @@
 
 #include <iostream>
 #include <ranges>
-#include <cmath>
 
 #include "camera.hpp"
 #include "scene.hpp"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../extern/stb/stb_image_write.h"
+
+constexpr float pi = 3.141592653589f;
 
 Renderer::Renderer(Scene &scene, Camera &camera)
     : scene(scene)
@@ -64,7 +65,7 @@ void Renderer::render()
     linalg::vec3 center = camera.position;
 
     // Determine viewport dimensions.
-    auto theta = camera.fov * M_PI / 180;
+    float theta = camera.fov * pi / 180;
     auto h = tan(theta / 2);
     auto viewport_height = 2 * h * camera.focus_distance;
     auto viewport_width = viewport_height * aspect_ratio;
