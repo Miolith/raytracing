@@ -4,7 +4,6 @@
 #include <iostream>
 #include <memory>
 #include <random>
-#include <unordered_map>
 
 namespace linalg
 {

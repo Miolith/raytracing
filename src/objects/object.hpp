@@ -123,7 +123,7 @@ public:
     {
         auto r0 = (1 - ref_idx) / (1 + ref_idx);
         r0 = r0 * r0;
-        return r0 + (1 - r0) * pow((1 - cosine), 5);
+        return r0 + (1 - r0) * powf((1 - cosine), 5);
     }
 
     linalg::vec3 scatter(linalg::vec3 &rayDir, linalg::vec3 &normal)
