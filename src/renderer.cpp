@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <ranges>
+#include <cmath>
 
 #include "camera.hpp"
 #include "scene.hpp"
