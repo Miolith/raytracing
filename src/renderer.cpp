@@ -95,7 +95,7 @@ void Renderer::render()
     linalg::vec3 defocus_disk_u = defocus_radius * u;
     linalg::vec3 defocus_disk_v = defocus_radius * v;
 
-    for (auto [y, x] :
+    for (auto &&[y, x] :
          std::views::cartesian_product(std::views::iota(0, image_height),
                                        std::views::iota(0, image_width)))
     {
